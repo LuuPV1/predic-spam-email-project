@@ -1,6 +1,7 @@
 package edu.uneti.predictemailspam.service.impl;
 
 import edu.uneti.predictemailspam.algorithm.FilterContentFile;
+import edu.uneti.predictemailspam.algorithm.KNNFilter;
 import edu.uneti.predictemailspam.model.entity.Email;
 import edu.uneti.predictemailspam.repository.EmailRepository;
 import edu.uneti.predictemailspam.service.EmailService;

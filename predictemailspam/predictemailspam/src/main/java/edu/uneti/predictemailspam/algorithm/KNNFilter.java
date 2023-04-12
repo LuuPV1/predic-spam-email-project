@@ -1,4 +1,4 @@
-package edu.uneti.predictemailspam.service.impl;
+package edu.uneti.predictemailspam.algorithm;
 
 import java.io.BufferedReader;
 import java.nio.file.Files;
@@ -23,14 +23,14 @@ public class KNNFilter {
 
     private void loadData(String filePath) {
         Path path = Paths.get(filePath);
-        try (BufferedReader reader = Files.newBufferedReader(path)){
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                emails.add(parts[0]);
-                labels.add(parts[parts.length - 1]);
-                String[] words = parts[0].split(" ");
+                String[] data = getDataEmail(line);
+                emails.add(data[0]);
+                labels.add(data[1]);
+                String[] words = data[0].split(" ");
                 for (String word : words) {
                     if (!idfMap.containsKey(word)) {
                         idfMap.put(word, 1.0);
@@ -52,8 +52,7 @@ public class KNNFilter {
     }
 
     public boolean predict(String content) {
-        String email = removeCommaContent(content);
-        String[] words = removeRedundantCharacters(email);
+        String[] words = content.split(" ");
 
         Map<String, Double> tfMap = new HashMap<>();
         for (String word : words) {
@@ -88,21 +87,14 @@ public class KNNFilter {
                 maxLabel = trainLabel;
             }
         }
-        return "spam".equals(maxLabel);
+        return "S".equals(maxLabel);
     }
 
-    private String[] removeRedundantCharacters(String content) {
-        String[] words = content.replaceAll("[^a-zA-Z0-9]", " ").split(" ");
-        String[] result = new String[words.length];
-        for (int i = 0; i < words.length; i++) {
-            if(!words[i].isEmpty()){
-                result[i] = words[i];
-            }
-        }
-        return result;
-    }
-
-    private static String removeCommaContent(String content){
-        return content.replaceAll(",", "");
+    private static String[] getDataEmail(String content){
+        int length = content.length();
+        String[] data = new String[2];
+        data[0] = content.substring(0, length - 1);
+        data[1] = content.substring(length -1 );
+        return data;
     }
 }
