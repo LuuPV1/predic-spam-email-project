@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +33,11 @@ public class KNNFilter {
                 emails.add(ConverterString.deAccent(data[0]));
                 labels.add(data[1]);
                 String[] words = data[0].split(" ");
-                for (String word : words) {
+                String[] newWords = new String[words.length];
+                for(int i = 0; i < words.length ; i++){
+                    newWords[i] = ConverterString.deAccent(words[i]);
+                }
+                for (String word : newWords) {
                     if (!idfMap.containsKey(word)) {
                         idfMap.put(word, 1.0);
                     }
@@ -85,6 +88,7 @@ public class KNNFilter {
                     score += tfMap.get(word) * trainTfMap.get(word) * idfMap.get(word);
                 }
             }
+
             if (score > maxScore) {
                 maxScore = score;
                 maxLabel = trainLabel;
@@ -93,11 +97,11 @@ public class KNNFilter {
         return "S".equals(maxLabel);
     }
 
-    private static String[] getDataEmail(String content){
+    private static String[] getDataEmail(String content) {
         int length = content.length();
         String[] data = new String[2];
         data[0] = content.substring(0, length - 1);
-        data[1] = content.substring(length -1 );
+        data[1] = content.substring(length - 1);
         return data;
     }
 
