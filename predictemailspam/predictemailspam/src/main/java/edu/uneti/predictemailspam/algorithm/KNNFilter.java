@@ -52,7 +52,8 @@ public class KNNFilter {
     }
 
     public boolean predict(String email) {
-        String[] words = email.split(" ");
+        String[] words = removeRedundantCharacters(email);
+
         Map<String, Double> tfMap = new HashMap<>();
         for (String word : words) {
             if (!tfMap.containsKey(word)) {
@@ -87,5 +88,16 @@ public class KNNFilter {
             }
         }
         return "spam".equals(maxLabel);
+    }
+
+    private String[] removeRedundantCharacters(String content) {
+        String[] words = content.replaceAll("[^a-zA-Z0-9]", " ").split(" ");
+        String[] result = new String[words.length];
+        for (int i = 0; i < words.length; i++) {
+            if(!words[i].isEmpty()){
+                result[i] = words[i];
+            }
+        }
+        return result;
     }
 }
