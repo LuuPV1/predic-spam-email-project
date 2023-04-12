@@ -5,6 +5,7 @@ import edu.uneti.predictemailspam.algorithm.KNNFilter;
 import edu.uneti.predictemailspam.model.entity.Email;
 import edu.uneti.predictemailspam.repository.EmailRepository;
 import edu.uneti.predictemailspam.service.EmailService;
+import edu.uneti.predictemailspam.untils.ConverterString;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
         KNNFilter knn = new KNNFilter("src/main/resources/static/train/TrainingData.txt");
         boolean isSpam = false;
         if("knn".equals(algorithm)){
-            isSpam = knn.predict(email.getDescription());
+            isSpam = knn.predict(ConverterString.deAccent(email.getDescription()));
         }else{
             isSpam = fcf.isSpamEmail(email.getDescription());
         }

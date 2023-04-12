@@ -1,9 +1,12 @@
 package edu.uneti.predictemailspam.algorithm;
 
+import edu.uneti.predictemailspam.untils.ConverterString;
+
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +31,7 @@ public class KNNFilter {
 
             while ((line = reader.readLine()) != null) {
                 String[] data = getDataEmail(line);
-                emails.add(data[0]);
+                emails.add(ConverterString.deAccent(data[0]));
                 labels.add(data[1]);
                 String[] words = data[0].split(" ");
                 for (String word : words) {
@@ -97,4 +100,5 @@ public class KNNFilter {
         data[1] = content.substring(length -1 );
         return data;
     }
+
 }
