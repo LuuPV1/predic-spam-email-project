@@ -51,7 +51,8 @@ public class KNNFilter {
         }
     }
 
-    public boolean predict(String email) {
+    public boolean predict(String content) {
+        String email = removeCommaContent(content);
         String[] words = removeRedundantCharacters(email);
 
         Map<String, Double> tfMap = new HashMap<>();
@@ -99,5 +100,9 @@ public class KNNFilter {
             }
         }
         return result;
+    }
+
+    private static String removeCommaContent(String content){
+        return content.replaceAll(",", "");
     }
 }
